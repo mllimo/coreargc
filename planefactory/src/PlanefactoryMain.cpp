@@ -1,0 +1,76 @@
+﻿#include <stdexcept>
+#include <iostream>
+#include <chrono>
+
+#include <raylib.h>
+#include <raymath.h>
+
+#include <CoreARGC/Entity.hpp>
+#include <CoreARGC/TextureSource.hpp>
+#include <CoreARGC/Grid.hpp>
+#include <CoreARGC/GameContext.hpp>
+
+#include <Planefactory/Ore.hpp>
+
+
+int main() {
+
+   CoreARGC::GameContext ctx;
+   CoreARGC::Grid grid(30, 30);
+
+   CoreARGC::Vector2i screen_size = { 1000, 1000 };
+   InitWindow(screen_size.x, screen_size.y, "Planefactory");
+   const CoreARGC::TextureSource COAL_ORE_TEX("assets/placed/coal_ore.png");
+
+   auto coal_ore = ctx.CreateEntity<Ore>(100.f);
+   coal_ore.lock()->SetPosition({ 500, 500 });
+   coal_ore.lock()->SetTexture(COAL_ORE_TEX.GetRef());
+
+   auto coal_ore2 = ctx.CreateEntity<Ore>(100.f);
+   coal_ore2.lock()->SetPosition({ 500, 510 });
+   coal_ore2.lock()->SetTexture(COAL_ORE_TEX.GetRef());
+
+   ctx.camera.target = { 0, 0 };
+   ctx.camera.rotation = 0;
+   ctx.camera.zoom = 1.f;
+   ctx.camera.offset = { 0, 0 };
+
+   while (not WindowShouldClose()) {
+
+      if (IsKeyDown(KEY_A))
+         ctx.camera.target.x -= 200 * GetFrameTime();
+      if (IsKeyDown(KEY_D))
+         ctx.camera.target.x += 200 * GetFrameTime();
+      if (IsKeyDown(KEY_W))
+         ctx.camera.target.y -= 200 * GetFrameTime();
+      if (IsKeyDown(KEY_S))
+         ctx.camera.target.y += 200 * GetFrameTime();
+
+      CoreARGC::Vector2i grid_position = grid.GetWorldToGrid(GetScreenToWorld2D(GetMousePosition(), ctx.camera));
+      Rectangle mouse_tile = grid.GetWorldTile(grid_position);
+      std::clog << grid_position.x << "|" << grid_position.y << std::endl;
+
+      if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
+         auto new_entity = ctx.CreateEntity<Ore>(100.f).lock();
+         new_entity->SetPosition(grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(COAL_ORE_TEX.GetRef());
+      }
+
+      BeginDrawing();
+      ClearBackground(WHITE);
+      DrawFPS(40, 40);
+      BeginMode2D(ctx.camera);
+
+      coal_ore.lock()->Draw();
+      coal_ore2.lock()->Draw();
+      ctx.Draw();
+
+      DrawRectangleRec(mouse_tile, Color{255, 0, 0, 100});
+
+      EndMode2D();
+      EndDrawing();
+   }
+
+   CloseWindow();
+   return 0;
+}
