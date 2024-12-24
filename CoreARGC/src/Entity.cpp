@@ -38,9 +38,6 @@ namespace CoreARGC {
       return CheckCollisionRecs(_hitbox, other._hitbox);
    }
 
-   void Entity::Logic(GameContext& ctx) {
-   }
-
    void Entity::Draw() const {
       DrawTexturePro(
          _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
@@ -50,5 +47,11 @@ namespace CoreARGC {
          0.0f,                                       // Rotación
          WHITE                                       // Color
       );
+   }
+
+   void Entity::Start(GameContext& ctx) {
+   }
+
+   void Entity::Logic(GameContext& ctx) {
    }
 }

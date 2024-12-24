@@ -1,4 +1,7 @@
+#include <CoreARGC/GameContext.hpp>
+
 #include <Planefactory/Ore.hpp>
+
 
 Ore::Ore(float amount)
    : _amount(amount) {
@@ -7,6 +10,10 @@ Ore::Ore(float amount)
 
 float Ore::GetAmount() const {
    return _amount;
+}
+
+std::string_view Ore::GetType() const {
+   return Ore::TYPE;
 }
 
 float Ore::Mine(float amount) {
@@ -20,6 +27,8 @@ float Ore::Mine(float amount) {
    return amount;
 }
 
-std::string_view Ore::GetType() const {
-   return Ore::TYPE;
+void Ore::Logic(CoreARGC::GameContext& ctx) {
+   if (_amount == 0) {
+      ctx.DestroyEntity(this);
+   }
 }

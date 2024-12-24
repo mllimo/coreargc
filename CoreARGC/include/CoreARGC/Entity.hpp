@@ -25,6 +25,7 @@ namespace CoreARGC {
       virtual bool CollideWhith(const Entity& other) const;
 
       virtual void Draw() const;
+      virtual void Start(GameContext& ctx);
       virtual void Logic(GameContext& ctx);
 
    private:
