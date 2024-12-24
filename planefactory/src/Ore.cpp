@@ -11,10 +11,15 @@ float Ore::GetAmount() const {
 
 float Ore::Mine(float amount) {
    if (_amount < amount) {
+      float mined = _amount;
       _amount = 0;
-      return abs(_amount - amount);
+      return mined;
    }
 
    _amount -= amount;
    return amount;
+}
+
+std::string_view Ore::GetType() const {
+   return Ore::TYPE;
 }

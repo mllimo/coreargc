@@ -12,4 +12,21 @@ namespace CoreARGC {
          }
       }
    }
+
+   std::vector<std::weak_ptr<Entity>> GameContext::GetCollidingEntities(const Entity& entity, std::string_view type) {
+      std::vector<std::weak_ptr<Entity>> collisions;
+
+      auto it = _entities.find(type.data());
+      if (it == _entities.end())
+         return {};
+
+      for (auto& current_entity : it->second) {
+         if (entity.CollideWhith(*current_entity)) {
+            collisions.emplace_back(current_entity);
+         }
+      }
+
+      return collisions;
+   }
+
 }

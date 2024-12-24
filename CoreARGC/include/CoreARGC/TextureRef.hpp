@@ -10,7 +10,7 @@
 #include <CoreARGC_api.h>
 
 namespace CoreARGC {
-   class TextureRef {
+   class COREARGC_EXPORT TextureRef {
    public:
       TextureRef() = default;
       TextureRef(const std::weak_ptr<Texture2D>& reference);

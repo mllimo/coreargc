@@ -6,7 +6,7 @@
 #include <CoreARGC/Entity.hpp>
 
 namespace CoreARGC {
-   class GameContext {
+   class COREARGC_EXPORT GameContext {
    public:
       Camera2D camera;
 
@@ -20,6 +20,8 @@ namespace CoreARGC {
          _entities[entity->GetType().data()].emplace_back(entity);
          return std::weak_ptr<Entity>(entity);
       }
+
+      std::vector<std::weak_ptr<Entity>> GetCollidingEntities(const Entity& entity, std::string_view type);
 
       void Draw() const;
 

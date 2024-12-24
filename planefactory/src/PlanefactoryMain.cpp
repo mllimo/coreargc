@@ -18,6 +18,11 @@ int main() {
    CoreARGC::GameContext ctx;
    CoreARGC::Grid grid(30, 30);
 
+   Rectangle hitbox = {
+      .width = 30,
+      .height = 30
+   };
+
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
    InitWindow(screen_size.x, screen_size.y, "Planefactory");
    const CoreARGC::TextureSource COAL_ORE_TEX("assets/placed/coal_ore.png");
@@ -25,10 +30,12 @@ int main() {
    auto coal_ore = ctx.CreateEntity<Ore>(100.f);
    coal_ore.lock()->SetPosition({ 500, 500 });
    coal_ore.lock()->SetTexture(COAL_ORE_TEX.GetRef());
+   coal_ore.lock()->SetHitbox(hitbox);
 
    auto coal_ore2 = ctx.CreateEntity<Ore>(100.f);
    coal_ore2.lock()->SetPosition({ 500, 510 });
    coal_ore2.lock()->SetTexture(COAL_ORE_TEX.GetRef());
+   coal_ore2.lock()->SetHitbox(hitbox);
 
    ctx.camera.target = { 0, 0 };
    ctx.camera.rotation = 0;
@@ -54,6 +61,7 @@ int main() {
          auto new_entity = ctx.CreateEntity<Ore>(100.f).lock();
          new_entity->SetPosition(grid.GetGridToWorld(grid_position));
          new_entity->SetTexture(COAL_ORE_TEX.GetRef());
+         new_entity->SetHitbox(hitbox);
       }
 
       BeginDrawing();
