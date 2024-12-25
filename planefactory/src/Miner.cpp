@@ -5,8 +5,6 @@
 #include <planefactory/Miner.hpp>
 #include <Planefactory/Ore.hpp>
 
-
-
 Miner::Miner(float mining_rate)
    : _mining_rate(mining_rate) {
    _mining_timer.SetDuration(1.f);

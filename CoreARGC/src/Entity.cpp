@@ -1,6 +1,10 @@
 #include <CoreARGC/Entity.hpp>
 
 namespace CoreARGC {
+   Entity::Entity() {
+      _hitbox.SetParentPosition(&_position);
+   }
+
    Entity::~Entity() {
    }
 
@@ -13,7 +17,7 @@ namespace CoreARGC {
    }
 
    void Entity::SetHitbox(const Rectangle& rectangle) {
-      _hitbox = rectangle;
+      _hitbox.SetBox(rectangle);
    }
 
    Vector2 Entity::GetPosition() const {
@@ -35,14 +39,15 @@ namespace CoreARGC {
    }
 
    bool Entity::CollideWhith(const Entity& other) const {
-      return CheckCollisionRecs(_hitbox, other._hitbox);
+      return _hitbox.CollideWith(other._hitbox);
    }
 
    void Entity::Draw() const {
+      Vector2 size = _hitbox.GetSize();
       DrawTexturePro(
          _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
          { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura
-         { _position.x, _position.y, _hitbox.width, _hitbox.height},            // Destino: tamaño 30x30
+         { _position.x, _position.y, size.x, size.y },            // Destino: tamaño 30x30
          { 0, 0 },                                 // Origen: el punto central de la textura (15,15 para centrarla)
          0.0f,                                       // Rotación
          WHITE                                       // Color

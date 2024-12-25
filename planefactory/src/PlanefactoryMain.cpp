@@ -23,6 +23,11 @@ int main() {
       .height = 30
    };
 
+   Rectangle miner_hitbox = {
+      .width = 60,
+      .height = 60
+   };
+
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
    InitWindow(screen_size.x, screen_size.y, "Planefactory");
 
@@ -60,7 +65,7 @@ int main() {
          auto new_entity = ctx.CreateEntity<Miner>(20.f).lock();
          new_entity->SetPosition(grid.GetGridToWorld(grid_position));
          new_entity->SetTexture(MINER_TEX.GetRef());
-         new_entity->SetHitbox(hitbox);
+         new_entity->SetHitbox(miner_hitbox);
       }
 
       ctx.Logic();

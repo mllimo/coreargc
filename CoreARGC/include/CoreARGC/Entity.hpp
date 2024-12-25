@@ -4,13 +4,14 @@
 #include <cassert>
 
 #include <CoreARGC/TextureRef.hpp>
-
+#include <CoreARGC/Hitbox.hpp>
 
 namespace CoreARGC {
    class COREARGC_EXPORT GameContext;
 
    class COREARGC_EXPORT Entity {
    public:
+      Entity();
       virtual ~Entity();
 
       void SetPosition(Vector2 position);
@@ -29,8 +30,8 @@ namespace CoreARGC {
       virtual void Logic(GameContext& ctx);
 
    private:
+      Hitbox _hitbox;
       Vector2 _position = {};
-      Rectangle _hitbox = {}; //< x and y represent the offset relative to _position
       TextureRef _texture;
    };
 }
