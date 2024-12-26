@@ -26,7 +26,7 @@ namespace CoreARGC {
    }
 
    const Entity& Item::GetEntity() const {
-      assert(_prototype == nullptr && "null prototype");
+      assert(_prototype != nullptr && "null prototype");
       return *_prototype;
    }
 

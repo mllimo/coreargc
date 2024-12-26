@@ -40,7 +40,6 @@ namespace CoreARGC {
       return world_rec;
    }
 
-
    bool Hitbox::CollideWith(const Hitbox& other) const {
       return CheckCollisionRecs(GetWorldRectangle(), other.GetWorldRectangle());
    }
