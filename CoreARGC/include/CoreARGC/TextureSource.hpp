@@ -3,7 +3,7 @@
 #include <CoreARGC/TextureRef.hpp>
 
 namespace CoreARGC {
-   class TextureSource {
+   class COREARGC_EXPORT TextureSource {
    public:
       TextureSource(const std::string& texture_path);
 

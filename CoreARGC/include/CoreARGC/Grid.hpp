@@ -4,9 +4,10 @@
 #include <raymath.h>
 
 #include <CoreARGC/Math.hpp>
+#include <CoreARGC_api.h>
 
 namespace CoreARGC {
-   class Grid {
+   class COREARGC_EXPORT Grid {
    public:
       Grid(float width, float height, Vector2 origin = { 0.f, 0.f });
 

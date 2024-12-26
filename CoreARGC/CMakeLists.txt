@@ -27,3 +27,5 @@ install(TARGETS CoreARGC
 )
 
 install(DIRECTORY include/ DESTINATION include/)
+
+add_subdirectory(tests)

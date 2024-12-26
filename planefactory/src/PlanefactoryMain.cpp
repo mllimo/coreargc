@@ -11,24 +11,28 @@
 #include <CoreARGC/GameContext.hpp>
 
 #include <Planefactory/Ore.hpp>
-
+#include <Planefactory/Miner.hpp>
 
 int main() {
 
    CoreARGC::GameContext ctx;
    CoreARGC::Grid grid(30, 30);
 
+   Rectangle hitbox = {
+      .width = 30,
+      .height = 30
+   };
+
+   Rectangle miner_hitbox = {
+      .width = 60,
+      .height = 60
+   };
+
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
    InitWindow(screen_size.x, screen_size.y, "Planefactory");
+
    const CoreARGC::TextureSource COAL_ORE_TEX("assets/placed/coal_ore.png");
-
-   auto coal_ore = ctx.CreateEntity<Ore>(100.f);
-   coal_ore.lock()->SetPosition({ 500, 500 });
-   coal_ore.lock()->SetTexture(COAL_ORE_TEX.GetRef());
-
-   auto coal_ore2 = ctx.CreateEntity<Ore>(100.f);
-   coal_ore2.lock()->SetPosition({ 500, 510 });
-   coal_ore2.lock()->SetTexture(COAL_ORE_TEX.GetRef());
+   const CoreARGC::TextureSource MINER_TEX("assets/placed/miner.png");
 
    ctx.camera.target = { 0, 0 };
    ctx.camera.rotation = 0;
@@ -48,21 +52,29 @@ int main() {
 
       CoreARGC::Vector2i grid_position = grid.GetWorldToGrid(GetScreenToWorld2D(GetMousePosition(), ctx.camera));
       Rectangle mouse_tile = grid.GetWorldTile(grid_position);
-      std::clog << grid_position.x << "|" << grid_position.y << std::endl;
+      //std::clog << grid_position.x << "|" << grid_position.y << std::endl;
 
       if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
          auto new_entity = ctx.CreateEntity<Ore>(100.f).lock();
          new_entity->SetPosition(grid.GetGridToWorld(grid_position));
          new_entity->SetTexture(COAL_ORE_TEX.GetRef());
+         new_entity->SetHitbox(hitbox);
       }
+
+      if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
+         auto new_entity = ctx.CreateEntity<Miner>(20.f).lock();
+         new_entity->SetPosition(grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(MINER_TEX.GetRef());
+         new_entity->SetHitbox(miner_hitbox);
+      }
+
+      ctx.Logic();
 
       BeginDrawing();
       ClearBackground(WHITE);
       DrawFPS(40, 40);
       BeginMode2D(ctx.camera);
 
-      coal_ore.lock()->Draw();
-      coal_ore2.lock()->Draw();
       ctx.Draw();
 
       DrawRectangleRec(mouse_tile, Color{255, 0, 0, 100});
