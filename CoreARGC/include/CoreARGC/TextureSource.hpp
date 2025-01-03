@@ -1,13 +1,21 @@
 #pragma once
 
+#include <filesystem>
+
 #include <CoreARGC/TextureRef.hpp>
 
 namespace CoreARGC {
    class COREARGC_EXPORT TextureSource {
    public:
-      TextureSource(const std::string& texture_path);
+      TextureSource() = default; // TODO: Generar Setter
+      TextureSource(TextureSource&&) = default;
+      TextureSource(const TextureSource&) = default;
+      TextureSource(const std::filesystem::path& texture_path);
 
       ~TextureSource();
+
+      TextureSource& operator=(TextureSource&&) = default;
+      TextureSource& operator=(const TextureSource&) = default;
 
       TextureRef GetRef() const;
 

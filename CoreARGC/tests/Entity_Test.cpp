@@ -6,13 +6,13 @@
 #include "MockEntity.hpp"
 
 TEST(EntityTest, DefaultConstructorInitializesCorrectly) {
-   Entity entity;
+   MockEntity entity;
    EXPECT_EQ(entity.GetPosition().x, 0);
    EXPECT_EQ(entity.GetPosition().y, 0);
 }
 
 TEST(EntityTest, SetAndGetPosition) {
-   Entity entity;
+   MockEntity entity;
    Vector2 position = { 10.0f, 20.0f };
    entity.SetPosition(position);
 

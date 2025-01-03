@@ -9,6 +9,14 @@ namespace CoreARGC {
       , _origin(origin) {
    }
 
+   void Grid::SetWidth(float width) {
+      _width = width;
+   }
+
+   void Grid::SetHeight(float height) {
+      _height = height;
+   }
+
    float Grid::GetWidth() const {
       return _width;
    }

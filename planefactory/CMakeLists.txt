@@ -1,7 +1,7 @@
 ﻿find_package(raylib REQUIRED)
 
-file(GLOB CPP_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
-file(GLOB HPP_SOURCES CONFIGURE_DEPENDS "include/Planefactory/*.hpp")
+file(GLOB CPP_SOURCES CONFIGURE_DEPENDS "src/**/*.cpp" "src/*.cpp")
+file(GLOB HPP_SOURCES CONFIGURE_DEPENDS "include/Planefactory/*.hpp" "include/Planefactory/**/*.hpp")
 
 add_executable (Planefactory ${CPP_SOURCES} ${HPP_SOURCES})
 

@@ -1,6 +1,6 @@
 #include <CoreARGC/GameContext.hpp>
 
-#include <Planefactory/Ore.hpp>
+#include <Planefactory/Ores/Ore.hpp>
 
 
 Ore::Ore(float amount)
@@ -14,6 +14,12 @@ float Ore::GetAmount() const {
 
 std::string_view Ore::GetType() const {
    return Ore::TYPE;
+}
+
+void Ore::CopyFrom(const Entity& other) {
+   Entity::CopyFrom(other);
+   const Ore& casted = static_cast<const Ore&>(other);
+   _amount = casted._amount;
 }
 
 float Ore::Mine(float amount) {

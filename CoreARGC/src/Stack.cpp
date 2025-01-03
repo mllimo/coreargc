@@ -1,10 +1,16 @@
 #include <CoreARGC/Stack.hpp>
 
 namespace CoreARGC {
+   Stack::Stack(const Item& prototype)
+      : _items_limit(100)
+      , _items(0)
+      , _prototype(static_cast<Item*>(prototype.Clone().release())) {
+   }
+
    Stack::Stack(unsigned limit, const Item& prototype)
       : _items_limit(limit)
       , _items(0)
-      , _prototype(prototype) {
+      , _prototype(static_cast<Item*>(prototype.Clone().release())) {
    }
 
    unsigned Stack::AddItems(unsigned items) {
@@ -31,7 +37,8 @@ namespace CoreARGC {
    }
 
    const Item& Stack::GetItem() const {
-      return _prototype;
+      assert(_prototype != nullptr);
+      return *_prototype;
    }
 
    unsigned Stack::GetCountItems() const {
