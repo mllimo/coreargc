@@ -14,4 +14,6 @@ namespace CoreARGC {
     constexpr const Vector2 RIGHT_VECTOR = { 1, 0};
     constexpr const Vector2 DOWN_VECTOR = { 0, 1 };
     constexpr const Vector2 LEFT_VECTOR = { -1, 0 };
+
+    Vector2 DirectionToVector(Direction direction);
 }

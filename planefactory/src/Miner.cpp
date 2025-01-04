@@ -9,7 +9,7 @@
 
 Miner::Miner(float mining_rate)
    : _mining_rate(mining_rate)
-   , _output_drop_direction(CoreARGC::Direction::LEFT) {
+   , _output_drop_direction(CoreARGC::Direction::RIGHT) {
    _mining_timer.SetDuration(1.f);
 }
 
@@ -73,10 +73,10 @@ Vector2 Miner::OutputPosition() {
       return { position.x + half_size.x, position.y + size.y };
 
    case CoreARGC::Direction::LEFT:
-      //  =====
-      //  |   |
-      //x |   |
-      //  =====
+      // =====
+      // |   |
+      //x|   |
+      // =====
       return { position.x + CoreARGC::LEFT_VECTOR.x, position.y + half_size.y };
    }
 

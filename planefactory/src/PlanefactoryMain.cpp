@@ -13,6 +13,7 @@
 #include <Planefactory/Ores/Ore.hpp>
 #include <Planefactory/Ores/CoalOre.hpp>
 #include <Planefactory/Ores/IronOre.hpp>
+#include <Planefactory/Machines/Belt.hpp>
 
 #include <Planefactory/Miner.hpp>
 
@@ -37,6 +38,8 @@ int main() {
    ctx.LoadTextureAs("assets/ores/Iron.png", Iron::TYPE);
    ctx.LoadTextureAs("assets/ores/Coal.png", Coal::TYPE);
    ctx.LoadTextureAs("assets/ores/IronOre.png", IronOre::TYPE);
+
+   auto BELT_TEX = ctx.LoadTextureAs("assets/auto/belt.png", Belt::TYPE);
    auto MINER_TEX = ctx.LoadTextureAs("assets/auto/miner.png", Miner::TYPE);
    auto COAL_ORE_TEX = ctx.LoadTextureAs("assets/ores/CoalOre.png", CoalOre::TYPE);
 
@@ -64,6 +67,13 @@ int main() {
          auto new_entity = ctx.CreateEntity<CoalOre>(100.f).lock();
          new_entity->SetPosition(ctx.grid.GetGridToWorld(grid_position));
          new_entity->SetTexture(COAL_ORE_TEX);
+         new_entity->SetHitbox(hitbox);
+      }
+
+      if (IsKeyPressed(KEY_A)) {
+         auto new_entity = ctx.CreateEntity<Belt>().lock();
+         new_entity->SetPosition(ctx.grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(BELT_TEX);
          new_entity->SetHitbox(hitbox);
       }
 
