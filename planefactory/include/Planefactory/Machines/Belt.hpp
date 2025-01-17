@@ -1,11 +1,14 @@
 #pragma once
 
+#include <array>
+
 #include <CoreARGC/Item.hpp>
 #include <CoreARGC/Direction.hpp>
 
 class Belt : public CoreARGC::Item {
 public:
    static constexpr const char* TYPE = "Belt";
+   static const unsigned BUFFER_SIZE = 9;
 
    Belt();
 
@@ -19,5 +22,7 @@ protected:
 
 private:
    float _velocity;
+   std::array<std::weak_ptr<Entity>, BUFFER_SIZE> _left_buffer;
+   std::array<std::weak_ptr<Entity>, BUFFER_SIZE> _right_buffer;
    CoreARGC::Direction _direction;
 };

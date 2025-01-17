@@ -5,7 +5,9 @@
 Belt::Belt()
    : CoreARGC::Item(Belt::TYPE)
    , _velocity(10.f)
-   , _direction(CoreARGC::Direction::RIGHT) {
+   , _direction(CoreARGC::Direction::RIGHT)
+   , _left_buffer()
+   , _right_buffer() {
 
 }
 

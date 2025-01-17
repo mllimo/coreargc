@@ -15,6 +15,7 @@ set(CXX_STANDARD_REQUIRED true)
 
 add_subdirectory ("CoreARGC")
 add_subdirectory ("planefactory")
+add_subdirectory ("sandbox")
 
 install(
     DIRECTORY ${CMAKE_SOURCE_DIR}/assets
