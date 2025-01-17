@@ -10,13 +10,17 @@
 #include <CoreARGC/Grid.hpp>
 #include <CoreARGC/GameContext.hpp>
 
-#include <Planefactory/Ore.hpp>
+#include <Planefactory/Ores/Ore.hpp>
+#include <Planefactory/Ores/CoalOre.hpp>
+#include <Planefactory/Ores/IronOre.hpp>
+#include <Planefactory/Machines/Belt.hpp>
+
 #include <Planefactory/Miner.hpp>
 
 int main() {
 
    CoreARGC::GameContext ctx;
-   CoreARGC::Grid grid(30, 30);
+   ctx.grid = CoreARGC::Grid(30, 30);
 
    Rectangle hitbox = {
       .width = 30,
@@ -31,8 +35,13 @@ int main() {
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
    InitWindow(screen_size.x, screen_size.y, "Planefactory");
 
-   const CoreARGC::TextureSource COAL_ORE_TEX("assets/placed/coal_ore.png");
-   const CoreARGC::TextureSource MINER_TEX("assets/placed/miner.png");
+   ctx.LoadTextureAs("assets/ores/Iron.png", Iron::TYPE);
+   ctx.LoadTextureAs("assets/ores/Coal.png", Coal::TYPE);
+   ctx.LoadTextureAs("assets/ores/IronOre.png", IronOre::TYPE);
+
+   auto BELT_TEX = ctx.LoadTextureAs("assets/auto/belt.png", Belt::TYPE);
+   auto MINER_TEX = ctx.LoadTextureAs("assets/auto/miner.png", Miner::TYPE);
+   auto COAL_ORE_TEX = ctx.LoadTextureAs("assets/ores/CoalOre.png", CoalOre::TYPE);
 
    ctx.camera.target = { 0, 0 };
    ctx.camera.rotation = 0;
@@ -50,34 +59,41 @@ int main() {
       if (IsKeyDown(KEY_S))
          ctx.camera.target.y += 200 * GetFrameTime();
 
-      CoreARGC::Vector2i grid_position = grid.GetWorldToGrid(GetScreenToWorld2D(GetMousePosition(), ctx.camera));
-      Rectangle mouse_tile = grid.GetWorldTile(grid_position);
+      CoreARGC::Vector2i grid_position = ctx.grid.GetWorldToGrid(GetScreenToWorld2D(GetMousePosition(), ctx.camera));
+      Rectangle mouse_tile = ctx.grid.GetWorldTile(grid_position);
       //std::clog << grid_position.x << "|" << grid_position.y << std::endl;
 
       if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-         auto new_entity = ctx.CreateEntity<Ore>(100.f).lock();
-         new_entity->SetPosition(grid.GetGridToWorld(grid_position));
-         new_entity->SetTexture(COAL_ORE_TEX.GetRef());
+         auto new_entity = ctx.CreateEntity<CoalOre>(100.f).lock();
+         new_entity->SetPosition(ctx.grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(COAL_ORE_TEX);
+         new_entity->SetHitbox(hitbox);
+      }
+
+      if (IsKeyPressed(KEY_A)) {
+         auto new_entity = ctx.CreateEntity<Belt>().lock();
+         new_entity->SetPosition(ctx.grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(BELT_TEX);
          new_entity->SetHitbox(hitbox);
       }
 
       if (IsMouseButtonReleased(MOUSE_RIGHT_BUTTON)) {
          auto new_entity = ctx.CreateEntity<Miner>(20.f).lock();
-         new_entity->SetPosition(grid.GetGridToWorld(grid_position));
-         new_entity->SetTexture(MINER_TEX.GetRef());
+         new_entity->SetPosition(ctx.grid.GetGridToWorld(grid_position));
+         new_entity->SetTexture(MINER_TEX);
          new_entity->SetHitbox(miner_hitbox);
       }
 
-      ctx.Logic();
+      ctx.Update();
 
       BeginDrawing();
       ClearBackground(WHITE);
       DrawFPS(40, 40);
       BeginMode2D(ctx.camera);
 
-      ctx.Draw();
+      ctx.Show();
 
-      DrawRectangleRec(mouse_tile, Color{255, 0, 0, 100});
+      DrawRectangleRec(mouse_tile, Color{ 255, 0, 0, 100 });
 
       EndMode2D();
       EndDrawing();

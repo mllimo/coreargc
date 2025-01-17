@@ -6,6 +6,7 @@ namespace CoreARGC {
    // Stack represent a stack of a prototype. It can't be recycled
    class COREARGC_EXPORT Stack {
    public:
+      Stack(const Item& prototype);
       Stack(unsigned limit, const Item& prototype);
 
       // returns number of ACTION items
@@ -19,6 +20,6 @@ namespace CoreARGC {
    private:
       unsigned _items_limit;
       unsigned _items;
-      Item _prototype;
+      std::unique_ptr<Item> _prototype;
    };
 }

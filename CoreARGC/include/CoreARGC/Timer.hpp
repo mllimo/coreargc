@@ -9,6 +9,8 @@ namespace CoreARGC {
    public:
       Timer() = default;
 
+      float GetDuration() const;
+
       void SetDuration(float duration_seconds);
       void SetCallback(const std::function<void()>& callback);
 

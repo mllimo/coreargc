@@ -5,7 +5,12 @@ namespace CoreARGC {
       _hitbox.SetParentPosition(&_position);
    }
 
-   Entity::~Entity() {
+   void Entity::SetVisible(bool is_visible) {
+      _visible = is_visible;
+   }
+
+   void Entity::SetActivated(bool is_enable) {
+      _activated = is_enable;
    }
 
    void Entity::SetPosition(Vector2 position) {
@@ -20,12 +25,20 @@ namespace CoreARGC {
       _hitbox.SetBox(rectangle);
    }
 
+   bool Entity::GetVisible() const {
+      return _visible;
+   }
+
+   bool Entity::GetActivated() const {
+      return _activated;
+   }
+
    Vector2 Entity::GetPosition() const {
       return _position;
    }
 
-   std::string_view Entity::GetType() const {
-      return "Entity";
+   const Hitbox& Entity::GetHitbox() const {
+      return _hitbox;
    }
 
    void Entity::CopyFrom(const Entity& other) {
@@ -34,15 +47,23 @@ namespace CoreARGC {
       _texture = other._texture;
    }
 
-   std::unique_ptr<Entity> Entity::Clone() const {
-      return std::make_unique<Entity>(*this);
-   }
-
    bool Entity::CollideWhith(const Entity& other) const {
       return _hitbox.CollideWith(other._hitbox);
    }
 
+   void Entity::Show() const {
+      if (not _visible) return;
+      Draw();
+   }
+
+   void Entity::Update(GameContext& ctx) {
+      if (not _activated) return;
+      Logic(ctx);
+   }
+
    void Entity::Draw() const {
+      if (not _visible) return;
+
       Vector2 size = _hitbox.GetSize();
       DrawTexturePro(
          _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)

@@ -19,5 +19,13 @@ private:
 
 class MockItem : public Item {
 public:
-   MockItem(std::string_view id) : Item(id, Entity()) {}
+   MockItem(std::string_view id) : Item(id) {}
+
+   virtual std::string_view GetType() const override {
+      return "MockItem";
+   }
+
+   virtual std::unique_ptr<Entity> Clone() const override {
+      return std::make_unique<MockItem>(*this);
+   }
 };

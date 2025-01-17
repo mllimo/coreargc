@@ -9,7 +9,11 @@
 namespace CoreARGC {
    class COREARGC_EXPORT Grid {
    public:
+      Grid() = default;
       Grid(float width, float height, Vector2 origin = { 0.f, 0.f });
+
+      void SetWidth(float width);
+      void SetHeight(float height);
 
       float GetWidth() const;
       float GetHeight() const;
@@ -18,8 +22,8 @@ namespace CoreARGC {
       Rectangle GetWorldTile(Vector2i grid_position) const;
 
    private:
-      Vector2 _origin;
-      float _width;
-      float _height;
+      Vector2 _origin = {};
+      float _width = 0.f;
+      float _height = 0.f;
    };
 }

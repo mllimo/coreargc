@@ -3,6 +3,10 @@
 #include <raylib.h>
 
 namespace CoreARGC {
+   float Timer::GetDuration() const {
+      return _duration_seconds;
+   }
+
    void Timer::SetDuration(float duration_seconds) {
       _duration_seconds = duration_seconds;
    }
