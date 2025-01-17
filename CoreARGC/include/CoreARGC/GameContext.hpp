@@ -44,6 +44,7 @@ namespace CoreARGC {
 
       void RemoveEntities();
       void DetectCollisions();
+      void DetectCollisionFor(const Entity& entity);
    };
 
    template <typename EntityType, typename ...ARGS>
@@ -53,6 +54,7 @@ namespace CoreARGC {
       auto entity = std::make_shared<EntityType>(std::forward<ARGS>(args)...);
       entity->Start(*this);
 
+      DetectCollisionFor(*entity);
       _entities[entity->GetType().data()].emplace_back(entity);
       return entity;
    }

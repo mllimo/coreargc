@@ -10,6 +10,7 @@ namespace CoreARGC {
       clone.reset(entity);
       clone->Start(*this);
 
+      DetectCollisionFor(*clone);
       _entities[clone->GetType().data()].emplace_back(clone);
       return clone;
    }
@@ -18,6 +19,7 @@ namespace CoreARGC {
       std::shared_ptr<Entity> clone = entity.Clone();
       clone->Start(*this);
 
+      DetectCollisionFor(*clone);
       _entities[entity.GetType().data()].emplace_back(clone);
       return clone;
    }
@@ -90,15 +92,19 @@ namespace CoreARGC {
    }
 
    void GameContext::DetectCollisions() {
-      for (const auto& [type1, entities1] : _entities) {
-         for (const auto& entity1 : entities1) {
-            for (const auto& [type2, entities2] : _entities) {
-               for (const auto& entity2 : entities2) {
-                  if (entity1 != entity2 && entity1->CollideWhith(*entity2)) {
-                     _current_collisions[entity1.get()].emplace_back(entity2);
-                     _current_collisions[entity2.get()].emplace_back(entity1);
-                  }
-               }
+      for (const auto& [type, entities] : _entities) {
+         for (const auto& entity : entities) {
+            DetectCollisionFor(*entity);
+         }
+      }
+   }
+
+   void GameContext::DetectCollisionFor(const Entity& entity) {
+      for (const auto& [type, entities] : _entities) {
+         for (const auto& other : entities) {
+            if (&entity != other.get() && entity.CollideWhith(*other)) {
+               _current_collisions[&entity].emplace_back(other);
+               _current_collisions[other.get()].emplace_back(std::weak_ptr<Entity>(other));
             }
          }
       }
