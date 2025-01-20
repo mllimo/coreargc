@@ -1,8 +1,11 @@
 #include <CoreARGC/Hitbox.hpp>
+#include <CoreARGC/Entity.hpp>
+
 
 namespace CoreARGC {
-   Hitbox::Hitbox(Vector2* parent_position, Rectangle box)
-      : _parent_position(parent_position)
+
+   Hitbox::Hitbox(Rectangle box) 
+      : Component() 
       , _box(box) {
 
    }
@@ -21,10 +24,6 @@ namespace CoreARGC {
       _box.y = offset.y;
    }
 
-   void Hitbox::SetParentPosition(Vector2* parent_position) {
-      _parent_position = parent_position;
-   }
-
    Vector2 Hitbox::GetSize() const {
       return { _box.width, _box.height };
    }
@@ -35,9 +34,18 @@ namespace CoreARGC {
 
    Rectangle Hitbox::GetWorldRectangle() const {
       Rectangle world_rec = _box;
-      world_rec.x = _parent_position->x + _box.x;
-      world_rec.y = _parent_position->y + _box.y;
+      Vector2 owner_position = GetOwner()->GetPosition();
+      world_rec.x = owner_position.x + _box.x;
+      world_rec.y = owner_position.y + _box.y;
       return world_rec;
+   }
+
+   std::string_view Hitbox::GetType() const {
+      return Hitbox::TYPE;
+   }
+
+   std::unique_ptr<Component> Hitbox::Clone() const {
+      return std::make_unique<Hitbox>(*this);
    }
 
    bool Hitbox::CollideWith(const Hitbox& other) const {

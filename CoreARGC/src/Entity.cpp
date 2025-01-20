@@ -1,8 +1,9 @@
 #include <CoreARGC/Entity.hpp>
 
 namespace CoreARGC {
-   Entity::Entity() {
-      _hitbox.SetParentPosition(&_position);
+
+   Entity::Entity(const Entity& other) {
+      CopyFrom(other);
    }
 
    void Entity::SetVisible(bool is_visible) {
@@ -21,8 +22,10 @@ namespace CoreARGC {
       _texture = texture;
    }
 
-   void Entity::SetHitbox(const Rectangle& rectangle) {
-      _hitbox.SetBox(rectangle);
+   void Entity::AddComponent(const Component& component) {
+      auto clone = component.Clone();
+      clone->SetOwner(this);
+      _components.push_back(std::move(clone));
    }
 
    bool Entity::GetVisible() const {
@@ -37,18 +40,14 @@ namespace CoreARGC {
       return _position;
    }
 
-   const Hitbox& Entity::GetHitbox() const {
-      return _hitbox;
-   }
-
    void Entity::CopyFrom(const Entity& other) {
-      _position = other._position;
-      _hitbox = other._hitbox;
-      _texture = other._texture;
-   }
+      for (const std::unique_ptr<Component>& component : other._components) {
+         auto cloned = component->Clone();
+         cloned->SetOwner(this);
+      }
 
-   bool Entity::CollideWhith(const Entity& other) const {
-      return _hitbox.CollideWith(other._hitbox);
+      _position = other._position;
+      _texture = other._texture;
    }
 
    void Entity::Show() const {
@@ -64,7 +63,7 @@ namespace CoreARGC {
    void Entity::Draw() const {
       if (not _visible) return;
 
-      Vector2 size = _hitbox.GetSize();
+      Vector2 size = GetComponent<Hitbox>()->GetSize(); // TODO: Remove this dependency
       DrawTexturePro(
          _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
          { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura

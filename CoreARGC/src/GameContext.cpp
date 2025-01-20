@@ -100,9 +100,13 @@ namespace CoreARGC {
    }
 
    void GameContext::DetectCollisionFor(const Entity& entity) {
+      auto* hitbox = entity.GetComponent<Hitbox>();
+      if (hitbox == nullptr) return;
+
       for (const auto& [type, entities] : _entities) {
          for (const auto& other : entities) {
-            if (&entity != other.get() && entity.CollideWhith(*other)) {
+            auto* other_hitbox = other->GetComponent<Hitbox>();
+            if (&entity != other.get() && hitbox->CollideWith(*other_hitbox)) {
                _current_collisions[&entity].emplace_back(other);
                _current_collisions[other.get()].emplace_back(std::weak_ptr<Entity>(other));
             }
