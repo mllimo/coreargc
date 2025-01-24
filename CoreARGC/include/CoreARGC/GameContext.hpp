@@ -14,6 +14,8 @@ namespace CoreARGC {
       Camera2D camera;
       Grid grid;
 
+      static GameContext& Instance();
+
       // Create and destroy entities
       void DestroyEntity(Entity* to_destroy);
       template <typename EntityType, typename ...ARGS>
@@ -37,6 +39,9 @@ namespace CoreARGC {
       void Show() const;
       //
 
+   protected:
+      GameContext() = default;
+
    private:
       std::deque<Entity*> _entities_to_remove;
       std::unordered_map<std::string, TextureSource> _textures;
@@ -53,7 +58,7 @@ namespace CoreARGC {
       static_assert(std::is_base_of<Entity, EntityType>::value, "EntityType debe heredar de Entity");
 
       auto entity = std::make_shared<EntityType>(std::forward<ARGS>(args)...);
-      entity->Start(*this);
+      entity->Start();
 
       DetectCollisionFor(*entity);
       _entities[entity->GetType().data()].emplace_back(entity);

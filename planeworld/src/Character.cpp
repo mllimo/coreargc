@@ -6,15 +6,19 @@
 
 namespace Planeworld {
 
-   void Character::Start(CoreARGC::GameContext& ctx) {
-      _ctx = &ctx;
-      SetTexture(ctx.LoadTextureAs("assets/planeworld/Character.png", Planeworld::Character::TYPE));
+   void Character::Start() {
+      _force = {};
+      _static_force = GRAVITY;
+      SetTexture(
+         CoreARGC::GameContext::Instance().
+         LoadTextureAs("assets/planeworld/Character.png", Planeworld::Character::TYPE)
+      );
    }
 
    void Character::SetPosition(Vector2 position) {
       Vector2 original_pos = GetPosition();
       Entity::SetPosition(position);
-      if (_ctx->CheckCollisionWith(*this, Wall::TYPE)) {
+      if (CoreARGC::GameContext::Instance().CheckCollisionWith(*this, Wall::TYPE)) {
          Entity::SetPosition(original_pos);
       }
    }
@@ -27,18 +31,27 @@ namespace Planeworld {
       return std::make_unique<Character>(*this);
    }
 
-   void Character::Logic(CoreARGC::GameContext& ctx) {
+   void Character::Logic() {
       Vector2 position = GetPosition();
 
       if (IsKeyDown(KEY_A))
          position.x -= 200 * GetFrameTime();
       if (IsKeyDown(KEY_D))
          position.x += 200 * GetFrameTime();
+      if (IsKeyPressed(KEY_SPACE))
+         _force = Vector2Add(_force, JUMP);
 
       SetPosition(position);
 
       position = GetPosition();
-      position.y += GRAVITY.y * GetFrameTime();
+
+      _force = Vector2Add(_force, _static_force);
+      if (_force.x > 1000) _force.x = 1000.f;
+      if (_force.x < -1000) _force.x = -1000.f;
+      if (_force.y > 1000) _force.y = 1000.f;
+      if (_force.y < -1000) _force.y = -1000.f;
+
+      position = Vector2Add(position, Vector2Scale(_force, GetFrameTime()));
 
       SetPosition(position);
    }

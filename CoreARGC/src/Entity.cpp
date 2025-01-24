@@ -6,6 +6,11 @@ namespace CoreARGC {
       CopyFrom(other);
    }
 
+   Entity::~Entity() {
+      for (auto& child : _childs) {
+      }
+   }
+
    void Entity::SetVisible(bool is_visible) {
       _visible = is_visible;
    }
@@ -55,9 +60,9 @@ namespace CoreARGC {
       Draw();
    }
 
-   void Entity::Update(GameContext& ctx) {
+   void Entity::Update() {
       if (not _activated) return;
-      Logic(ctx);
+      Logic();
    }
 
    void Entity::Draw() const {
@@ -74,9 +79,9 @@ namespace CoreARGC {
       );
    }
 
-   void Entity::Start(GameContext& ctx) {
+   void Entity::Start() {
    }
 
-   void Entity::Logic(GameContext& ctx) {
+   void Entity::Logic() {
    }
 }

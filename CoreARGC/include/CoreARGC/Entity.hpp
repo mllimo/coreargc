@@ -18,7 +18,7 @@ namespace CoreARGC {
       Entity(const Entity&);
       Entity(Entity&&) = default;
 
-      virtual ~Entity() = default;
+      virtual ~Entity();
 
       void SetVisible(bool is_visible);
       void SetActivated(bool is_enable);
@@ -38,12 +38,12 @@ namespace CoreARGC {
       virtual void CopyFrom(const Entity& other);
 
       void Show() const;
-      void Update(GameContext& ctx);
-      virtual void Start(GameContext& ctx);
+      void Update();
+      virtual void Start();
 
    protected:
       virtual void Draw() const;
-      virtual void Logic(GameContext& ctx);
+      virtual void Logic();
 
    private:
       Entity* _owner;

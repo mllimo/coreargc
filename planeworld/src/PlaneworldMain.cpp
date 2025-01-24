@@ -15,7 +15,7 @@
 
 int main() {
 
-   CoreARGC::GameContext ctx;
+   CoreARGC::GameContext& ctx = CoreARGC::GameContext::Instance();
    ctx.grid = CoreARGC::Grid(50, 50);
 
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
@@ -38,7 +38,7 @@ int main() {
    wall2.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
 
    auto wall3 = ctx.CreateEntity<Planeworld::Wall>();
-   wall3.lock()->SetPosition({ 500, 600 });
+   wall3.lock()->SetPosition({ 500, 700 });
    wall3.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
 
    ctx.camera.target = { 0, 0 };

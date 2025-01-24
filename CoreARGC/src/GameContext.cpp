@@ -1,6 +1,11 @@
 #include <CoreARGC/GameContext.hpp>
 
 namespace CoreARGC {
+   GameContext& GameContext::Instance() {
+      static GameContext ctx;
+      return ctx;
+   }
+
    void GameContext::DestroyEntity(Entity* to_destroy) {
       _entities_to_remove.emplace_back(to_destroy);
    }
@@ -8,7 +13,7 @@ namespace CoreARGC {
    std::weak_ptr<Entity> GameContext::CreateEntity(Entity* entity) {
       std::shared_ptr<Entity> clone;
       clone.reset(entity);
-      clone->Start(*this);
+      clone->Start();
 
       DetectCollisionFor(*clone);
       _entities[clone->GetType().data()].emplace_back(clone);
@@ -17,7 +22,7 @@ namespace CoreARGC {
 
    std::weak_ptr<Entity> GameContext::CreateEntity(const Entity& entity) {
       std::shared_ptr<Entity> clone = entity.Clone();
-      clone->Start(*this);
+      clone->Start();
 
       DetectCollisionFor(*clone);
       _entities[entity.GetType().data()].emplace_back(clone);
@@ -43,7 +48,7 @@ namespace CoreARGC {
             return true;
          }
       }
-     
+
       return false;
    }
 
@@ -58,7 +63,7 @@ namespace CoreARGC {
    TextureRef GameContext::LoadTextureAs(const std::filesystem::path& path, const std::string& id) {
       if (not std::filesystem::exists(path))
          throw std::runtime_error("Texture path: " + path.string() + " doesn't exist");
-      
+
       auto found = _textures.find(id);
       if (found != _textures.end()) {
          return found->second.GetRef();
@@ -76,7 +81,7 @@ namespace CoreARGC {
 
       for (auto& pair : _entities) {
          for (auto& entity : pair.second) {
-            entity->Update(*this);
+            entity->Update();
          }
       }
 

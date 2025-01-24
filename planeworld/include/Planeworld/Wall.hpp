@@ -9,12 +9,9 @@ namespace Planeworld {
    public:
       static constexpr const char* TYPE = "Wall";
 
-      void Start(CoreARGC::GameContext& ctx) override;
+      void Start() override;
 
       virtual std::string_view GetType() const override;
       virtual std::unique_ptr<Entity> Clone() const override;
-
-   protected:
-      virtual void Logic(CoreARGC::GameContext& ctx) override;
    };
 }
