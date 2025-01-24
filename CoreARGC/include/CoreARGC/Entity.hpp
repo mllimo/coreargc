@@ -22,7 +22,7 @@ namespace CoreARGC {
 
       void SetVisible(bool is_visible);
       void SetActivated(bool is_enable);
-      void SetPosition(Vector2 position);
+      virtual void SetPosition(Vector2 position);
       void SetTexture(const TextureRef& texture);
       void AddComponent(const Component& component);
 

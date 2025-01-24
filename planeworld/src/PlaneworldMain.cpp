@@ -11,6 +11,7 @@
 #include <CoreARGC/GameContext.hpp>
 
 #include <Planeworld/Character.hpp>
+#include <Planeworld/Wall.hpp>
 
 int main() {
 
@@ -19,14 +20,26 @@ int main() {
 
    CoreARGC::Vector2i screen_size = { 1000, 1000 };
    InitWindow(screen_size.x, screen_size.y, "Planeworld");
- 
+
    ctx.LoadTextureAs("assets/planeworld/Dirt.png", "Dirt");
-   ctx.LoadTextureAs("assets/planeworld/Wood.png", "Wood");
    ctx.LoadTextureAs("assets/planeworld/Stone.png", "Stone");
    ctx.LoadTextureAs("assets/planeworld/Leave.png", "Leave");
 
    auto player = ctx.CreateEntity<Planeworld::Character>();
-   player.lock()->AddComponent(CoreARGC::Hitbox({0, 0, 50, 50}));
+   player.lock()->SetPosition({ 500, 500 });
+   player.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+
+   auto wall = ctx.CreateEntity<Planeworld::Wall>();
+   wall.lock()->SetPosition({ 600, 500 });
+   wall.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+
+   auto wall2 = ctx.CreateEntity<Planeworld::Wall>();
+   wall2.lock()->SetPosition({ 400, 500 });
+   wall2.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+
+   auto wall3 = ctx.CreateEntity<Planeworld::Wall>();
+   wall3.lock()->SetPosition({ 500, 600 });
+   wall3.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
 
    ctx.camera.target = { 0, 0 };
    ctx.camera.rotation = 0;

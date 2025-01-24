@@ -24,6 +24,7 @@ namespace CoreARGC {
 
       // Collision system
       std::vector<std::weak_ptr<Entity>> GetCollisionsFor(const Entity& entity) const;
+      bool CheckCollisionWith(const Entity& entity, const std::string& type) const;
       //
 
       // Textures in memory

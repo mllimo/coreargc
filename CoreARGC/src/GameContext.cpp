@@ -32,6 +32,21 @@ namespace CoreARGC {
       return {};
    }
 
+   bool GameContext::CheckCollisionWith(const Entity& entity, const std::string& type) const {
+      auto it = _entities.find(type);
+      if (it == _entities.end()) return false;
+
+      const Hitbox* box = entity.GetComponent<Hitbox>();
+      for (const auto& other : it->second) {
+         auto* other_hitbox = other->GetComponent<Hitbox>();
+         if (box->CollideWith(*other_hitbox)) {
+            return true;
+         }
+      }
+     
+      return false;
+   }
+
    TextureRef GameContext::GetTexture(const std::string& id) {
       auto found = _textures.find(id);
       if (found == _textures.end())
@@ -43,8 +58,12 @@ namespace CoreARGC {
    TextureRef GameContext::LoadTextureAs(const std::filesystem::path& path, const std::string& id) {
       if (not std::filesystem::exists(path))
          throw std::runtime_error("Texture path: " + path.string() + " doesn't exist");
+      
+      auto found = _textures.find(id);
+      if (found != _textures.end()) {
+         return found->second.GetRef();
+      }
 
-      assert(_textures.find(id) == _textures.end() && "Repeated texture");
       TextureSource& source = _textures[id] = std::move(TextureSource(path));
       return source.GetRef();
    }
