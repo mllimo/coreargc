@@ -11,16 +11,14 @@ namespace Planeworld {
       static constexpr const char* TYPE = "Character";
       Object* ground_hitbox = nullptr;
 
-      virtual void SetPosition(Vector2 position) override;
-
       void Start() override;
 
       virtual std::string_view GetType() const override;
       virtual std::unique_ptr<Entity> Clone() const override;
 
    protected:
-      static constexpr Vector2 GRAVITY = { 0.f, 9.18f };
-      static constexpr Vector2 JUMP = { 0.f, -600.f };
+      static constexpr Vector2 GRAVITY = { 0.f, 2.18f };
+      static constexpr Vector2 JUMP = { 0.f, -3000.f };
 
       Vector2 _force;
       Vector2 _static_force;

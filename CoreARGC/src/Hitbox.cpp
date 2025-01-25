@@ -1,13 +1,34 @@
 #include <CoreARGC/Hitbox.hpp>
 #include <CoreARGC/Entity.hpp>
+#include <CoreARGC/CollisionSystem.hpp>
 
 
 namespace CoreARGC {
 
-   Hitbox::Hitbox(Rectangle box) 
-      : Component() 
-      , _box(box) {
+   Hitbox::Hitbox(Entity* owner)
+      : Component(owner)
+      , _box() {
+      CollisionSystem::Instance().Suscribe(this);
+   }
 
+   Hitbox::~Hitbox() {
+      CollisionSystem::Instance().Unsuscribe(this);
+   }
+
+   float Hitbox::Left() const {
+      return GetPosition().x;
+   }
+
+   float Hitbox::Right() const {
+      return GetPosition().x + GetSize().x;
+   }
+
+   float Hitbox::Top() const {
+      return GetPosition().y;
+   }
+
+   float Hitbox::Bottom() const {
+      return GetPosition().y + GetSize().y;
    }
 
    void Hitbox::SetSize(Vector2 size) {
@@ -32,6 +53,10 @@ namespace CoreARGC {
       return { _box.x, _box.y };
    }
 
+   Vector2 Hitbox::GetPosition() const {
+      return Vector2Add(GetOffset(), GetOwner()->GetPosition());
+   }
+
    Rectangle Hitbox::GetWorldRectangle() const {
       Rectangle world_rec = _box;
       Vector2 owner_position = GetOwner()->GetPosition();
@@ -44,8 +69,10 @@ namespace CoreARGC {
       return Hitbox::TYPE;
    }
 
-   std::unique_ptr<Component> Hitbox::Clone() const {
-      return std::make_unique<Hitbox>(*this);
+   std::unique_ptr<Component> Hitbox::Clone(Entity* new_owner) const {
+      Hitbox component(*this);
+      component._owner = new_owner;
+      return std::make_unique<Hitbox>(std::move(component));
    }
 
    bool Hitbox::CollideWith(const Hitbox& other) const {

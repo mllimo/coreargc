@@ -32,8 +32,7 @@ namespace CoreARGC {
    }
 
    void Entity::AddComponent(const Component& component) {
-      auto clone = component.Clone();
-      clone->SetOwner(this);
+      auto clone = component.Clone(this);
       _components.push_back(std::move(clone));
    }
 
@@ -62,8 +61,7 @@ namespace CoreARGC {
 
    void Entity::CopyFrom(const Entity& other) {
       for (const std::unique_ptr<Component>& component : other._components) {
-         auto cloned = component->Clone();
-         cloned->SetOwner(this);
+         auto cloned = component->Clone(this);
       }
 
       _position = other._position;

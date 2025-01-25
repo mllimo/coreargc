@@ -22,10 +22,11 @@ namespace CoreARGC {
 
       void SetVisible(bool is_visible);
       void SetActivated(bool is_enable);
-      virtual void SetPosition(Vector2 position);
+      void SetPosition(Vector2 position);
       void SetTexture(const TextureRef& texture);
       void AddComponent(const Component& component);
       void AddChild(const std::weak_ptr<Entity>& entity);
+      template <typename ComponentT> void AddComponent();
 
       bool GetVisible() const;
       bool GetActivated() const;
@@ -73,6 +74,11 @@ namespace CoreARGC {
             return static_cast<TComponent*>(component.get());
       }
       return nullptr;
+   }
+
+   template <typename ComponentT> 
+   void Entity::AddComponent() {
+      _components.emplace_back(new ComponentT(this));
    }
 
 }

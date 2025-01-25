@@ -11,8 +11,13 @@ namespace CoreARGC {
 
       using Component::Component;
 
-      Hitbox(Rectangle box);
-      ~Hitbox() override = default;
+      Hitbox(Entity* owner);
+      ~Hitbox() override;
+
+      float Left() const;
+      float Right() const;
+      float Top() const;
+      float Bottom() const;
 
       void SetSize(Vector2 size);
       void SetBox(Rectangle box);
@@ -20,10 +25,11 @@ namespace CoreARGC {
 
       Vector2 GetSize() const;
       Vector2 GetOffset() const;
+      Vector2 GetPosition() const;
       Rectangle GetWorldRectangle() const;
       std::string_view GetType() const override;
 
-      std::unique_ptr<Component> Clone() const override;
+      std::unique_ptr<Component> Clone(Entity* new_owner) const override;
 
       bool CollideWith(const Hitbox& other) const;
 

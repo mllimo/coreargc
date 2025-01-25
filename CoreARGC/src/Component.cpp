@@ -7,14 +7,7 @@ namespace CoreARGC {
       : _owner(owner) {
    }
 
-   Component::Component(const Component& other) {
-   }
-
    Component::~Component() {
-   }
-
-   void Component::SetOwner(Entity* owner) {
-      _owner = owner;
    }
 
    Entity* Component::GetOwner() const {

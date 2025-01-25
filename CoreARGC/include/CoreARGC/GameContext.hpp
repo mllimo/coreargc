@@ -24,12 +24,6 @@ namespace CoreARGC {
       std::weak_ptr<Entity> CreateEntity(const Entity& entity);
       //
 
-      // Collision system
-      std::vector<std::weak_ptr<Entity>> GetCollisionsFor(const Entity& entity) const;
-      bool CheckCollisionWith(const Entity& entity, const std::string& type) const;
-      bool IsCollidingWith(const Entity& entity, const std::string& type) const;
-      //
-
       // Textures in memory
       TextureRef GetTexture(const std::string& id);
       TextureRef LoadTextureAs(const std::filesystem::path& path, const std::string& id);
@@ -47,11 +41,8 @@ namespace CoreARGC {
       std::deque<Entity*> _entities_to_remove;
       std::unordered_map<std::string, TextureSource> _textures;
       std::unordered_map<std::string, std::deque<std::shared_ptr<Entity>>> _entities;
-      std::unordered_map<const Entity*, std::vector<std::weak_ptr<Entity>>> _current_collisions;
 
       void RemoveEntities();
-      void DetectCollisions();
-      void DetectCollisionFor(const Entity& entity);
    };
 
    template <typename EntityType, typename ...ARGS>
@@ -61,7 +52,6 @@ namespace CoreARGC {
       auto entity = std::make_shared<EntityType>(std::forward<ARGS>(args)...);
       entity->Start();
 
-      DetectCollisionFor(*entity);
       _entities[entity->GetType().data()].emplace_back(entity);
       return entity;
    }

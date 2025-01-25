@@ -29,26 +29,40 @@ int main() {
 
    auto player = ctx.CreateEntity<Planeworld::Character>();
    player.lock()->SetPosition({ 500, 500 });
-   player.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+   player.lock()->AddComponent<CoreARGC::Hitbox>();
+
+   auto player_hitbox = player.lock()->GetComponent<CoreARGC::Hitbox>();
+   player_hitbox->SetSize({ 50, 50 });
+
 
    auto ground_hitbox = ctx.CreateEntity<Planeworld::Object>();
    ground_hitbox.lock()->SetPosition({ 0, 50 });
-   ground_hitbox.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 10 }));
+   ground_hitbox.lock()->AddComponent<CoreARGC::Hitbox>();
+
+   auto ground_hitbox_box = ground_hitbox.lock()->GetComponent<CoreARGC::Hitbox>();
+   ground_hitbox_box->SetSize({ 50, 10 });
 
    player.lock()->ground_hitbox = ground_hitbox.lock().get();
    player.lock()->AddChild(ground_hitbox);
 
    auto wall = ctx.CreateEntity<Planeworld::Wall>();
    wall.lock()->SetPosition({ 600, 500 });
-   wall.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+   wall.lock()->AddComponent<CoreARGC::Hitbox>();
+   auto wall_hb = wall.lock()->GetComponent<CoreARGC::Hitbox>();
+   wall_hb->SetSize({ 50, 50 });
+
 
    auto wall2 = ctx.CreateEntity<Planeworld::Wall>();
    wall2.lock()->SetPosition({ 400, 500 });
-   wall2.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+   wall2.lock()->AddComponent<CoreARGC::Hitbox>();
+   auto wall2_hb = wall2.lock()->GetComponent<CoreARGC::Hitbox>();
+   wall2_hb->SetSize({ 50, 50 });
 
    auto wall3 = ctx.CreateEntity<Planeworld::Wall>();
    wall3.lock()->SetPosition({ 500, 700 });
-   wall3.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+   wall3.lock()->AddComponent<CoreARGC::Hitbox>();
+   auto wall3_hb = wall3.lock()->GetComponent<CoreARGC::Hitbox>();
+   wall3_hb->SetSize({ 50, 50 });
 
    ctx.camera.target = { 0, 0 };
    ctx.camera.rotation = 0;

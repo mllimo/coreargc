@@ -18,14 +18,6 @@ namespace Planeworld {
       );
    }
 
-   void Character::SetPosition(Vector2 position) {
-      Vector2 original_pos = GetPosition();
-      Entity::SetPosition(position);
-      if (CoreARGC::GameContext::Instance().CheckCollisionWith(*this, Wall::TYPE)) {
-         Entity::SetPosition(original_pos);
-      }
-   }
-
    std::string_view Character::GetType() const {
       return Character::TYPE;
    }
@@ -35,30 +27,19 @@ namespace Planeworld {
    }
 
    void Character::Logic() {
-
-      std::clog << std::boolalpha << _on_the_floor << std::endl;
-      if (CoreARGC::GameContext::Instance().IsCollidingWith(*ground_hitbox, Wall::TYPE)) {
-         _on_the_floor = true;
-      }
-      else {
-         _on_the_floor = false;
-      }
-
+      _force = {};
       Vector2 position = GetPosition();
-      if (IsKeyDown(KEY_A))
-         position.x -= 200 * GetFrameTime();
-      if (IsKeyDown(KEY_D))
-         position.x += 200 * GetFrameTime();
-      if (IsKeyPressed(KEY_SPACE))
-         _force = Vector2Add(_force, JUMP);
-      SetPosition(position);
 
-      position = GetPosition();
-      _force = Vector2Add(_force, _static_force);
-      if (_force.x > 1000) _force.x = 1000.f;
-      if (_force.x < -1000) _force.x = -1000.f;
-      if (_force.y > 1000) _force.y = 1000.f;
-      if (_force.y < -1000) _force.y = -1000.f;
+      if (IsKeyDown(KEY_A))
+         _force.x -= 200;
+      if (IsKeyDown(KEY_D))
+         _force.x += 200;
+      if (IsKeyDown(KEY_W))
+         _force.y -= 200;
+      if (IsKeyDown(KEY_S))
+         _force.y += 200;
+
+      //SetPosition(position);
       position = Vector2Add(position, Vector2Scale(_force, GetFrameTime()));
       SetPosition(position);
 

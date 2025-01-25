@@ -1,4 +1,5 @@
 #include <CoreARGC/GameContext.hpp>
+#include <CoreARGC/CollisionSystem.hpp>
 
 namespace CoreARGC {
    GameContext& GameContext::Instance() {
@@ -15,7 +16,6 @@ namespace CoreARGC {
       clone.reset(entity);
       clone->Start();
 
-      DetectCollisionFor(*clone);
       _entities[clone->GetType().data()].emplace_back(clone);
       return clone;
    }
@@ -24,47 +24,8 @@ namespace CoreARGC {
       std::shared_ptr<Entity> clone = entity.Clone();
       clone->Start();
 
-      DetectCollisionFor(*clone);
       _entities[entity.GetType().data()].emplace_back(clone);
       return clone;
-   }
-
-   std::vector<std::weak_ptr<Entity>> GameContext::GetCollisionsFor(const Entity& entity) const {
-      auto it = _current_collisions.find(&entity);
-      if (it != _current_collisions.end()) {
-         return it->second;
-      }
-      return {};
-   }
-
-   bool GameContext::CheckCollisionWith(const Entity& entity, const std::string& type) const {
-      auto it = _entities.find(type);
-      if (it == _entities.end()) return false;
-
-      const Hitbox* box = entity.GetComponent<Hitbox>();
-      for (const auto& other : it->second) {
-         auto* other_hitbox = other->GetComponent<Hitbox>();
-         if (box->CollideWith(*other_hitbox)) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   bool GameContext::IsCollidingWith(const Entity& entity, const std::string& type) const {
-      auto it = _current_collisions.find(&entity);
-      if (it == _current_collisions.end()) return false;
-      
-      for (auto& collision : it->second) {
-         if (auto ptr = collision.lock()) {
-            if (ptr->GetType() == type) {
-               return true;
-            }
-         }
-      }
-
-      return false;
    }
 
    TextureRef GameContext::GetTexture(const std::string& id) {
@@ -90,9 +51,7 @@ namespace CoreARGC {
 
    void GameContext::Update() {
 
-      _current_collisions.clear();
-
-      DetectCollisions();
+      CollisionSystem::Instance().DetectCollisions();
 
       for (auto& pair : _entities) {
          for (auto& entity : pair.second) {
@@ -128,29 +87,6 @@ namespace CoreARGC {
       }
 
       _entities_to_remove.clear();
-   }
-
-   void GameContext::DetectCollisions() {
-      for (const auto& [type, entities] : _entities) {
-         for (const auto& entity : entities) {
-            DetectCollisionFor(*entity);
-         }
-      }
-   }
-
-   void GameContext::DetectCollisionFor(const Entity& entity) {
-      auto* hitbox = entity.GetComponent<Hitbox>();
-      if (hitbox == nullptr) return;
-
-      for (const auto& [type, entities] : _entities) {
-         for (const auto& other : entities) {
-            auto* other_hitbox = other->GetComponent<Hitbox>();
-            if (&entity != other.get() && hitbox->CollideWith(*other_hitbox)) {
-               _current_collisions[&entity].emplace_back(other);
-               _current_collisions[other.get()].emplace_back(std::weak_ptr<Entity>(other));
-            }
-         }
-      }
    }
 
 }
