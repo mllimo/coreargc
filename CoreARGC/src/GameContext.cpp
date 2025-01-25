@@ -1,5 +1,6 @@
 #include <CoreARGC/GameContext.hpp>
 #include <CoreARGC/CollisionSystem.hpp>
+#include <CoreARGC/PhysicsSystem.hpp>
 
 namespace CoreARGC {
    GameContext& GameContext::Instance() {
@@ -50,6 +51,8 @@ namespace CoreARGC {
    }
 
    void GameContext::Update() {
+
+      PhysicsSystem::Instance().Update();
 
       CollisionSystem::Instance().DetectCollisions();
 

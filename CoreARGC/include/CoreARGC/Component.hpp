@@ -3,10 +3,12 @@
 #include <memory>
 #include <string_view>
 
+#include <CoreARGC_api.h>
+
 namespace CoreARGC {
    class Entity;
 
-   class Component {
+   class COREARGC_EXPORT Component {
    public:
       Component(Entity* owner);
       Component(Component&&) = default;

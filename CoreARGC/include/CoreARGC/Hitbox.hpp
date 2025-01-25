@@ -5,7 +5,7 @@
 #include <CoreARGC/Component.hpp>
 
 namespace CoreARGC {
-   class Hitbox : public Component {
+   class COREARGC_EXPORT Hitbox : public Component {
    public:
       static constexpr const char* TYPE = "Hitbox";
 

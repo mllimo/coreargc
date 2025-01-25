@@ -1,9 +1,9 @@
 #include <CoreARGC/GameContext.hpp>
 #include <CoreARGC/CollisionSystem.hpp>
+#include <CoreARGC/Rigid.hpp>
 
 #include <Planeworld/Character.hpp>
 #include <Planeworld/Wall.hpp>
-#include <Planeworld/Object.hpp>
 
 #include <iostream>
 
@@ -11,8 +11,6 @@
 namespace Planeworld {
 
    void Character::Start() {
-      _force = {};
-      _static_force = GRAVITY;
       SetTexture(
          CoreARGC::GameContext::Instance().
          LoadTextureAs("assets/planeworld/Character.png", Planeworld::Character::TYPE)
@@ -28,22 +26,21 @@ namespace Planeworld {
    }
 
    void Character::Logic() {
-      _force = {};
+      auto rigid = GetComponent<CoreARGC::Rigid>();
+      auto collisions = CoreARGC::CollisionSystem::Instance().GetAllCollisionsFor(*this);
 
-      Vector2 position = GetPosition();
+      //for (auto collision : collisions) {
+      //   collision->GetOwner()->SetPosition(Vector2Add(collision->GetOwner()->GetPosition(), { 0, 100 * GetFrameTime() }));
+      //}
 
       if (IsKeyDown(KEY_A))
-         _force.x -= 200;
+         rigid->AddForce({ -200, 0 });
       if (IsKeyDown(KEY_D))
-         _force.x += 200;
+         rigid->AddForce({ 200, 0 });
       if (IsKeyDown(KEY_W))
-         _force.y -= 200;
+         rigid->AddForce({ 0, -200 });
       if (IsKeyDown(KEY_S))
-         _force.y += 200;
-
-      //SetPosition(position);
-      position = Vector2Add(position, Vector2Scale(_force, GetFrameTime()));
-      SetPosition(position);
+         rigid->AddForce({ 0, 200 });
 
    }
 

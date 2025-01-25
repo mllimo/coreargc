@@ -9,9 +9,6 @@
 #include <CoreARGC/Hitbox.hpp>
 
 namespace CoreARGC {
-   class COREARGC_EXPORT GameContext;
-   class COREARGC_EXPORT Component;
-
    class COREARGC_EXPORT Entity {
    public:
       Entity() = default;

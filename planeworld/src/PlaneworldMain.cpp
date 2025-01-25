@@ -9,6 +9,7 @@
 #include <CoreARGC/TextureSource.hpp>
 #include <CoreARGC/Grid.hpp>
 #include <CoreARGC/GameContext.hpp>
+#include <CoreARGC/Rigid.hpp>
 
 #include <Planeworld/Character.hpp>
 #include <Planeworld/Wall.hpp>
@@ -30,10 +31,10 @@ int main() {
    auto player = ctx.CreateEntity<Planeworld::Character>();
    player.lock()->SetPosition({ 500, 500 });
    player.lock()->AddComponent<CoreARGC::Hitbox>();
+   player.lock()->AddComponent<CoreARGC::Rigid>();
 
    auto player_hitbox = player.lock()->GetComponent<CoreARGC::Hitbox>();
    player_hitbox->SetSize({ 50, 50 });
-
 
    auto ground_hitbox = ctx.CreateEntity<Planeworld::Object>();
    ground_hitbox.lock()->SetPosition({ 0, 50 });
@@ -43,7 +44,6 @@ int main() {
    ground_hitbox_box->SetIsStatic(true);
    ground_hitbox_box->SetSize({ 50, 10 });
 
-   player.lock()->ground_hitbox = ground_hitbox.lock().get();
    player.lock()->AddChild(ground_hitbox);
 
    auto wall = ctx.CreateEntity<Planeworld::Wall>();
