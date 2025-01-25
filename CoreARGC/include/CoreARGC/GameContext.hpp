@@ -19,7 +19,7 @@ namespace CoreARGC {
       // Create and destroy entities
       void DestroyEntity(Entity* to_destroy);
       template <typename EntityType, typename ...ARGS>
-      std::weak_ptr<Entity> CreateEntity(ARGS&&... args);
+      std::weak_ptr<EntityType> CreateEntity(ARGS&&... args);
       std::weak_ptr<Entity> CreateEntity(Entity* entity); //< Get the ownership
       std::weak_ptr<Entity> CreateEntity(const Entity& entity);
       //
@@ -27,6 +27,7 @@ namespace CoreARGC {
       // Collision system
       std::vector<std::weak_ptr<Entity>> GetCollisionsFor(const Entity& entity) const;
       bool CheckCollisionWith(const Entity& entity, const std::string& type) const;
+      bool IsCollidingWith(const Entity& entity, const std::string& type) const;
       //
 
       // Textures in memory
@@ -54,7 +55,7 @@ namespace CoreARGC {
    };
 
    template <typename EntityType, typename ...ARGS>
-   std::weak_ptr<Entity> GameContext::CreateEntity(ARGS&&... args) {
+   std::weak_ptr<EntityType> GameContext::CreateEntity(ARGS&&... args) {
       static_assert(std::is_base_of<Entity, EntityType>::value, "EntityType debe heredar de Entity");
 
       auto entity = std::make_shared<EntityType>(std::forward<ARGS>(args)...);

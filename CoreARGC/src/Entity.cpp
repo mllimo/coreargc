@@ -1,4 +1,5 @@
 #include <CoreARGC/Entity.hpp>
+#include <CoreARGC/GameContext.hpp>
 
 namespace CoreARGC {
 
@@ -8,6 +9,9 @@ namespace CoreARGC {
 
    Entity::~Entity() {
       for (auto& child : _childs) {
+         if (auto ptr = child.lock()) {
+            GameContext::Instance().DestroyEntity(ptr.get());
+         }
       }
    }
 
@@ -33,6 +37,13 @@ namespace CoreARGC {
       _components.push_back(std::move(clone));
    }
 
+   void Entity::AddChild(const std::weak_ptr<Entity>& entity) {
+      if (auto ptr = entity.lock()) {
+         ptr->_parent = this;
+         _childs.push_back(entity);
+      }
+   }
+
    bool Entity::GetVisible() const {
       return _visible;
    }
@@ -42,6 +53,10 @@ namespace CoreARGC {
    }
 
    Vector2 Entity::GetPosition() const {
+      if (_parent) {
+         return Vector2Add(_position, _parent->GetPosition());
+      }
+
       return _position;
    }
 
@@ -66,17 +81,21 @@ namespace CoreARGC {
    }
 
    void Entity::Draw() const {
-      if (not _visible) return;
-
+      Vector2 position = GetPosition();
       Vector2 size = GetComponent<Hitbox>()->GetSize(); // TODO: Remove this dependency
-      DrawTexturePro(
-         _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
-         { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura
-         { _position.x, _position.y, size.x, size.y },            // Destino: tamaño 30x30
-         { 0, 0 },                                 // Origen: el punto central de la textura (15,15 para centrarla)
-         0.0f,                                       // Rotación
-         WHITE                                       // Color
-      );
+      if (_texture.IsExpired()) {
+         DrawRectangleRec({ position.x, position.y, size.x, size.y }, BLACK);
+      }
+      else {
+         DrawTexturePro(
+            _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
+            { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura
+            { position.x, position.y, size.x, size.y },            // Destino: tamaño 30x30
+            { 0, 0 },                                 // Origen: el punto central de la textura (15,15 para centrarla)
+            0.0f,                                       // Rotación
+            WHITE                                       // Color
+         );
+      }
    }
 
    void Entity::Start() {

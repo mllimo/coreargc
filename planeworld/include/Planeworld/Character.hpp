@@ -3,11 +3,13 @@
 #include <string>
 
 #include <CoreARGC/Entity.hpp>
+#include <Planeworld/Object.hpp>
 
 namespace Planeworld {
    class Character : public CoreARGC::Entity {
    public:
       static constexpr const char* TYPE = "Character";
+      Object* ground_hitbox = nullptr;
 
       virtual void SetPosition(Vector2 position) override;
 
@@ -22,6 +24,7 @@ namespace Planeworld {
 
       Vector2 _force;
       Vector2 _static_force;
+      bool _on_the_floor = false;
 
       virtual void Logic() override;
    };

@@ -12,6 +12,8 @@
 
 #include <Planeworld/Character.hpp>
 #include <Planeworld/Wall.hpp>
+#include <Planeworld/Object.hpp>
+
 
 int main() {
 
@@ -28,6 +30,13 @@ int main() {
    auto player = ctx.CreateEntity<Planeworld::Character>();
    player.lock()->SetPosition({ 500, 500 });
    player.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 50 }));
+
+   auto ground_hitbox = ctx.CreateEntity<Planeworld::Object>();
+   ground_hitbox.lock()->SetPosition({ 0, 50 });
+   ground_hitbox.lock()->AddComponent(CoreARGC::Hitbox({ 0, 0, 50, 10 }));
+
+   player.lock()->ground_hitbox = ground_hitbox.lock().get();
+   player.lock()->AddChild(ground_hitbox);
 
    auto wall = ctx.CreateEntity<Planeworld::Wall>();
    wall.lock()->SetPosition({ 600, 500 });

@@ -52,6 +52,21 @@ namespace CoreARGC {
       return false;
    }
 
+   bool GameContext::IsCollidingWith(const Entity& entity, const std::string& type) const {
+      auto it = _current_collisions.find(&entity);
+      if (it == _current_collisions.end()) return false;
+      
+      for (auto& collision : it->second) {
+         if (auto ptr = collision.lock()) {
+            if (ptr->GetType() == type) {
+               return true;
+            }
+         }
+      }
+
+      return false;
+   }
+
    TextureRef GameContext::GetTexture(const std::string& id) {
       auto found = _textures.find(id);
       if (found == _textures.end())

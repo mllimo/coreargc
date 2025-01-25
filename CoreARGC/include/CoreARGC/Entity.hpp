@@ -25,6 +25,7 @@ namespace CoreARGC {
       virtual void SetPosition(Vector2 position);
       void SetTexture(const TextureRef& texture);
       void AddComponent(const Component& component);
+      void AddChild(const std::weak_ptr<Entity>& entity);
 
       bool GetVisible() const;
       bool GetActivated() const;
@@ -46,14 +47,14 @@ namespace CoreARGC {
       virtual void Logic();
 
    private:
-      Entity* _owner;
-      std::list<std::weak_ptr<Entity>> _childs;
-      std::list<std::unique_ptr<Component>> _components;
-
       Vector2 _position = {};
       TextureRef _texture;
       bool _visible = true;
       bool _activated = true;
+      Entity* _parent = nullptr;
+
+      std::list<std::weak_ptr<Entity>> _childs;
+      std::list<std::unique_ptr<Component>> _components;
    };
 
    template <typename TComponent>

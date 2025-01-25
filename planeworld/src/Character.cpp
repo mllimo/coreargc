@@ -2,6 +2,9 @@
 
 #include <Planeworld/Character.hpp>
 #include <Planeworld/Wall.hpp>
+#include <Planeworld/Object.hpp>
+
+#include <iostream>
 
 
 namespace Planeworld {
@@ -32,28 +35,33 @@ namespace Planeworld {
    }
 
    void Character::Logic() {
-      Vector2 position = GetPosition();
 
+      std::clog << std::boolalpha << _on_the_floor << std::endl;
+      if (CoreARGC::GameContext::Instance().IsCollidingWith(*ground_hitbox, Wall::TYPE)) {
+         _on_the_floor = true;
+      }
+      else {
+         _on_the_floor = false;
+      }
+
+      Vector2 position = GetPosition();
       if (IsKeyDown(KEY_A))
          position.x -= 200 * GetFrameTime();
       if (IsKeyDown(KEY_D))
          position.x += 200 * GetFrameTime();
       if (IsKeyPressed(KEY_SPACE))
          _force = Vector2Add(_force, JUMP);
-
       SetPosition(position);
 
       position = GetPosition();
-
       _force = Vector2Add(_force, _static_force);
       if (_force.x > 1000) _force.x = 1000.f;
       if (_force.x < -1000) _force.x = -1000.f;
       if (_force.y > 1000) _force.y = 1000.f;
       if (_force.y < -1000) _force.y = -1000.f;
-
       position = Vector2Add(position, Vector2Scale(_force, GetFrameTime()));
-
       SetPosition(position);
+
    }
 
 }
