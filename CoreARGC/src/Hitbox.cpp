@@ -45,6 +45,14 @@ namespace CoreARGC {
       _box.y = offset.y;
    }
 
+   void Hitbox::SetIsStatic(bool static_mode) {
+      _is_static = static_mode;
+   }
+
+   bool Hitbox::GetIsStatic() const {
+      return _is_static;
+   }
+
    Vector2 Hitbox::GetSize() const {
       return { _box.width, _box.height };
    }

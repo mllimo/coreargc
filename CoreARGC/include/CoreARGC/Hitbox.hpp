@@ -22,7 +22,9 @@ namespace CoreARGC {
       void SetSize(Vector2 size);
       void SetBox(Rectangle box);
       void SetOffset(Vector2 offset);
+      void SetIsStatic(bool static_mode);
 
+      bool GetIsStatic() const;
       Vector2 GetSize() const;
       Vector2 GetOffset() const;
       Vector2 GetPosition() const;
@@ -35,5 +37,6 @@ namespace CoreARGC {
 
    private:
       Rectangle _box; //< { offset, dimensions }
+      bool _is_static = false; //< in collision resolution an static object can't be move
    };
 }

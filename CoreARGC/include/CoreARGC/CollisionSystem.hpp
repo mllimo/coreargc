@@ -16,6 +16,8 @@ namespace CoreARGC {
       void DetectCollisions();
       void ResolveCollision(Hitbox* a, Hitbox* b);
 
+      const std::vector<Hitbox*>& GetAllCollisionsFor(const Entity& entity);
+
    private:
       std::vector<Hitbox*> _suscribers;
       std::unordered_map<Hitbox*, std::vector<Hitbox*>> _current_collisions;

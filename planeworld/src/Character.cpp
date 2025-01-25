@@ -1,4 +1,5 @@
 #include <CoreARGC/GameContext.hpp>
+#include <CoreARGC/CollisionSystem.hpp>
 
 #include <Planeworld/Character.hpp>
 #include <Planeworld/Wall.hpp>
@@ -28,6 +29,7 @@ namespace Planeworld {
 
    void Character::Logic() {
       _force = {};
+
       Vector2 position = GetPosition();
 
       if (IsKeyDown(KEY_A))

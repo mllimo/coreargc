@@ -45,28 +45,39 @@ namespace CoreARGC {
       Vector2 a_position = a->GetPosition();
       Vector2 b_position = b->GetPosition();
 
+      bool a_is_static = a->GetIsStatic();
+      bool b_is_static = b->GetIsStatic();
+
       if (overlapX < overlapY) {
          if (a_position.x < b_position.x) {
-            a_position.x -= overlapX / 2;
-            b_position.x += overlapX / 2;
+            if (!a_is_static) a_position.x -= overlapX;
+            if (!b_is_static) b_position.x += overlapX;
          }
          else {
-            a_position.x += overlapX / 2;
-            b_position.x -= overlapX / 2;
+            if (!a_is_static) a_position.x += overlapX;
+            if (!b_is_static) b_position.x -= overlapX;
          }
       }
       else {
          if (a_position.y < b_position.y) {
-            a_position.y -= overlapY / 2;
-            b_position.y += overlapY / 2;
+            if (!a_is_static) a_position.y -= overlapY;
+            if (!b_is_static) b_position.y += overlapY;
          }
          else {
-            a_position.y += overlapY / 2;
-            b_position.y -= overlapY / 2;
+            if (!a_is_static) a_position.y += overlapY;
+            if (!b_is_static) b_position.y -= overlapY;
          }
       }
 
-      a->GetOwner()->SetPosition(a_position);
-      b->GetOwner()->SetPosition(b_position);
+      if (!a_is_static) a->GetOwner()->SetPosition(a_position);
+      if (!b_is_static) b->GetOwner()->SetPosition(b_position);
    }
+
+   const std::vector<Hitbox*>& CollisionSystem::GetAllCollisionsFor(const Entity& entity) {
+      const Hitbox* hb = entity.GetComponent<Hitbox>();
+      auto it = _current_collisions.find(const_cast<CoreARGC::Hitbox*>(hb));
+      if (it == _current_collisions.end()) return {};
+      return it->second;
+   }
+
 }
