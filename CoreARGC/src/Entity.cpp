@@ -1,8 +1,18 @@
 #include <CoreARGC/Entity.hpp>
+#include <CoreARGC/GameContext.hpp>
 
 namespace CoreARGC {
-   Entity::Entity() {
-      _hitbox.SetParentPosition(&_position);
+
+   Entity::Entity(const Entity& other) {
+      CopyFrom(other);
+   }
+
+   Entity::~Entity() {
+      for (auto& child : _childs) {
+         if (auto ptr = child.lock()) {
+            GameContext::Instance().DestroyEntity(ptr.get());
+         }
+      }
    }
 
    void Entity::SetVisible(bool is_visible) {
@@ -21,8 +31,16 @@ namespace CoreARGC {
       _texture = texture;
    }
 
-   void Entity::SetHitbox(const Rectangle& rectangle) {
-      _hitbox.SetBox(rectangle);
+   void Entity::AddComponent(const Component& component) {
+      auto clone = component.Clone(this);
+      _components.push_back(std::move(clone));
+   }
+
+   void Entity::AddChild(const std::weak_ptr<Entity>& entity) {
+      if (auto ptr = entity.lock()) {
+         ptr->_parent = this;
+         _childs.push_back(entity);
+      }
    }
 
    bool Entity::GetVisible() const {
@@ -34,21 +52,20 @@ namespace CoreARGC {
    }
 
    Vector2 Entity::GetPosition() const {
+      if (_parent) {
+         return Vector2Add(_position, _parent->GetPosition());
+      }
+
       return _position;
    }
 
-   const Hitbox& Entity::GetHitbox() const {
-      return _hitbox;
-   }
-
    void Entity::CopyFrom(const Entity& other) {
-      _position = other._position;
-      _hitbox = other._hitbox;
-      _texture = other._texture;
-   }
+      for (const std::unique_ptr<Component>& component : other._components) {
+         auto cloned = component->Clone(this);
+      }
 
-   bool Entity::CollideWhith(const Entity& other) const {
-      return _hitbox.CollideWith(other._hitbox);
+      _position = other._position;
+      _texture = other._texture;
    }
 
    void Entity::Show() const {
@@ -56,28 +73,32 @@ namespace CoreARGC {
       Draw();
    }
 
-   void Entity::Update(GameContext& ctx) {
+   void Entity::Update() {
       if (not _activated) return;
-      Logic(ctx);
+      Logic();
    }
 
    void Entity::Draw() const {
-      if (not _visible) return;
-
-      Vector2 size = _hitbox.GetSize();
-      DrawTexturePro(
-         _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
-         { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura
-         { _position.x, _position.y, size.x, size.y },            // Destino: tamaño 30x30
-         { 0, 0 },                                 // Origen: el punto central de la textura (15,15 para centrarla)
-         0.0f,                                       // Rotación
-         WHITE                                       // Color
-      );
+      Vector2 position = GetPosition();
+      Vector2 size = GetComponent<Hitbox>()->GetSize(); // TODO: Remove this dependency
+      if (_texture.IsExpired()) {
+         DrawRectangleRec({ position.x, position.y, size.x, size.y }, BLACK);
+      }
+      else {
+         DrawTexturePro(
+            _texture.Value(),                             // Textura (desbloqueada desde weak_ptr)
+            { 0, 0, (float)_texture.Value().width, (float)_texture.Value().height }, // Fuente: toda la textura
+            { position.x, position.y, size.x, size.y },            // Destino: tamaño 30x30
+            { 0, 0 },                                 // Origen: el punto central de la textura (15,15 para centrarla)
+            0.0f,                                       // Rotación
+            WHITE                                       // Color
+         );
+      }
    }
 
-   void Entity::Start(GameContext& ctx) {
+   void Entity::Start() {
    }
 
-   void Entity::Logic(GameContext& ctx) {
+   void Entity::Logic() {
    }
 }
