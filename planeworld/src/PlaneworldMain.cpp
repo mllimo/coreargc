@@ -34,7 +34,10 @@ int main() {
    player.lock()->AddComponent<CoreARGC::Rigid>();
 
    auto player_hitbox = player.lock()->GetComponent<CoreARGC::Hitbox>();
+   auto player_rigid = player.lock()->GetComponent<CoreARGC::Rigid>();
+
    player_hitbox->SetSize({ 50, 50 });
+   player_rigid->SetGravity({ 0, 9.8f }); // TODO: BROOOOKEN
 
    auto ground_hitbox = ctx.CreateEntity<Planeworld::Object>();
    ground_hitbox.lock()->SetPosition({ 0, 50 });
@@ -74,15 +77,6 @@ int main() {
    ctx.camera.offset = { 0, 0 };
 
    while (not WindowShouldClose()) {
-
-      //if (IsKeyDown(KEY_A))
-      //   ctx.camera.target.x -= 200 * GetFrameTime();
-      //if (IsKeyDown(KEY_D))
-      //   ctx.camera.target.x += 200 * GetFrameTime();
-      //if (IsKeyDown(KEY_W))
-      //   ctx.camera.target.y -= 200 * GetFrameTime();
-      //if (IsKeyDown(KEY_S))
-      //   ctx.camera.target.y += 200 * GetFrameTime();
 
       ctx.Update();
 

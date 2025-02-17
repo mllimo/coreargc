@@ -29,18 +29,14 @@ namespace Planeworld {
       auto rigid = GetComponent<CoreARGC::Rigid>();
       auto collisions = CoreARGC::CollisionSystem::Instance().GetAllCollisionsFor(*this);
 
-      //for (auto collision : collisions) {
-      //   collision->GetOwner()->SetPosition(Vector2Add(collision->GetOwner()->GetPosition(), { 0, 100 * GetFrameTime() }));
-      //}
-
       if (IsKeyDown(KEY_A))
-         rigid->AddForce({ -200, 0 });
+         rigid->AddForce({ -500, 0 });
       if (IsKeyDown(KEY_D))
-         rigid->AddForce({ 200, 0 });
+         rigid->AddForce({ 500, 0 });
       if (IsKeyDown(KEY_W))
-         rigid->AddForce({ 0, -200 });
+         rigid->AddForce({ 0, -500 });
       if (IsKeyDown(KEY_S))
-         rigid->AddForce({ 0, 200 });
+         rigid->AddForce({ 0, 500 });
 
    }
 
