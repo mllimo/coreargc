@@ -25,7 +25,8 @@ namespace CoreARGC {
 
       for (Rigid* rigid : _suscribers) {
          // a = F / m
-         rigid->_acceleration = Vector2Scale(rigid->_force, 1.0f / rigid->_mass);
+         rigid->_acceleration = Vector2Add(rigid->_acceleration, Vector2Scale(rigid->_force, 1.0f / rigid->_mass));
+         rigid->_acceleration = Vector2Add(rigid->_acceleration, rigid->_gravity);
 
          // v += a * deltaTime
          Vector2 deltaVelocity = Vector2Scale(rigid->_acceleration, deltaTime);

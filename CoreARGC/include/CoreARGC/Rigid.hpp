@@ -18,10 +18,12 @@ namespace CoreARGC {
       void AddForce(Vector2 force);
 
       void SetMass(float mass);
+      void SetGravity(Vector2 gravity);
       void SetFriction(float friction);
 
       float GetMass() const;
       float GetFriction() const;
+      Vector2 GetGravity() const;
       Vector2 GetVelocity() const;
 
       std::string_view GetType() const override;
@@ -29,9 +31,10 @@ namespace CoreARGC {
 
    private:
       float _mass = 1.f;
-      float _friction = 0.0f;
+      float _friction = 0.0015f;
       Vector2 _force = {};
       Vector2 _velocity = {};
+      Vector2 _gravity = {};
       Vector2 _acceleration = {};
    };
 }

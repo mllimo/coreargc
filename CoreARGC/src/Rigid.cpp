@@ -18,6 +18,10 @@ namespace CoreARGC {
       _mass = mass;
    }
 
+   void Rigid::SetGravity(Vector2 gravity) {
+      _gravity = gravity;
+   }
+
    void Rigid::SetFriction(float friction) {
       _friction = friction;
    }
@@ -28,6 +32,10 @@ namespace CoreARGC {
 
    float Rigid::GetFriction() const {
       return _friction;
+   }
+
+   Vector2 Rigid::GetGravity() const {
+      return _gravity;
    }
 
    Vector2 Rigid::GetVelocity() const {
